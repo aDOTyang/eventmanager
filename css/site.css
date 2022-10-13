@@ -1,0 +1,79 @@
+:root {
+  --ay-primary-color: #001e43;
+  --ay-secondary-color: rgb(255, 155, 61);
+  --ay-dark-color: rgb(35, 35, 35);
+  --ay-light-color: rgb(235, 235, 235);
+
+  --ay-navbar-toggler-glow: rgba(255, 155, 61, 0.7);
+  --ay-navbar-toggler-color: rgb(255, 155, 61);
+  --ay-highlight-color: rgb(245, 245, 105);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 0 auto;
+  margin-top: 6rem;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+.footer {
+  background: var(--ay-primary-color);
+  color: var(--ay-light-color);
+}
+
+#mainNav {
+  background: var(--ay-primary-color);
+}
+
+#mainNav button {
+  border-color: var(--ay-secondary-color);
+}
+
+.navbar-toggler {
+  color: var(--ay-navbar-toggler-glow);
+}
+
+.navbar-toggler-icon-ay {
+  color: var(--ay-navbar-toggler-color);
+  font-size: 1.5rem;
+}
+
+.socialIcon {
+  font-size: 1.75rem;
+  color: var(--ay-light-color);
+  letter-spacing: 0.75rem;
+}
+
+.socialIcon:hover {
+  color: var(--ay-secondary-color);
+}
+
+.devIcon {
+  font-size: 2rem;
+  padding-right: 0.5rem;
+}
+
+.appLogo {
+  max-width: 350px;
+}
+
+.checkList {
+  list-style-type: none;
+}
+
+.checkList > li i {
+  color: var(--ay-secondary-color);
+  padding-right: 0.5rem;
+}
