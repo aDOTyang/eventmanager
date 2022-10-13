@@ -117,6 +117,9 @@ function buildDropDown() {
   }
   // appends the modified list to the eventDD dropdown list
   eventDD.appendChild(ddUL);
+
+  // calls 'All' results without needing to first be selected
+  displayStats(curEvent);
 }
 
 function getEvents(element) {
