@@ -229,7 +229,7 @@ function getEventData() {
 
 // displays all event data in table format
 function displayInputData() {
-  const template = document.getElementById("inputData-template");
+  const template = document.getElementById("eventData-template");
   // gets location where template will be written/inserted
   const inputBody = document.getElementById("inputBody");
   // prevents duplicate appends by clearing out variable prior to writing
@@ -267,7 +267,7 @@ function saveEventData() {
 
   // the chosen option is assigned 'selected' class which can be targeted
   let stateSel = document.getElementById("newEventState");
-  newEventObj["state"] = stateSel.options[stateSel.selectedIndex].textValue;
+  newEventObj["state"] = stateSel.options[stateSel.selectedIndex].text;
 
   newEventObj["attendance"] = parseInt(
     document.getElementById("newEventAttendance").value,
@@ -284,7 +284,7 @@ function saveEventData() {
   curEvent.push(newEventObj);
 
   // overwrites the original 'curEvent' object with revised object within local storage
-  localStorage.setItem("inputData", JSON.stringify(curEvent));
+  localStorage.setItem("eventData", JSON.stringify(curEvent));
 
   buildDropDown();
 }
