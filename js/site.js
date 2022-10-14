@@ -65,7 +65,7 @@ const events = [
   },
 ];
 
-// builds a list of specific cities
+// builds a list of specific cities. entry point for the app
 // interview question - pull a unique/distinct set out of array
 function buildDropDown() {
   let eventDD = document.getElementById("eventDropDown");
@@ -74,8 +74,8 @@ function buildDropDown() {
   // grabs template from the HTML template tag
   const template = document.getElementById("cityDD-template");
 
-  // creates local copy of the global 'events' dataset to mimic pulling data from database
-  let curEvent = events;
+  // pulls data from database - local storage in this app example
+  let curEvent = getEventData();
 
   // filter array by city
   // [...new Set] will return distinct list (of unique items)
@@ -120,12 +120,15 @@ function buildDropDown() {
 
   // calls 'All' results without needing to first be selected
   displayStats(curEvent);
+
+  // loads data in lower grid
+  displayInputData();
 }
 
 function getEvents(element) {
   let city = element.getAttribute("data-string");
 
-  let curEvent = events;
+  let curEvent = getEventData();
   let statsHdr = document.getElementById("statsHdr");
   statsHdr.innerHTML = `Stats for ${city} Events`;
 
@@ -209,4 +212,79 @@ function leastAttendance(events) {
     }
   }
   return leastAttendance;
+}
+
+// retrieves data from local storage
+// values must be converted between JS and JSON (JS Object Notation) via 'parse' & 'stringify' as they cannot communicate as-is
+function getEventData() {
+  let curEvent = JSON.parse(localStorage.getItem("eventData"));
+
+  // temporarily shoves existing data set into local storage as default value-to-be-replaced by the local Storage
+  if (curEvent == null) {
+    curEvent = events;
+    localStorage.setItem("eventData", JSON.stringify(curEvent));
+  }
+  return curEvent;
+}
+
+// displays all event data in table format
+function displayInputData() {
+  const template = document.getElementById("inputData-template");
+  // gets location where template will be written/inserted
+  const inputBody = document.getElementById("inputBody");
+  // prevents duplicate appends by clearing out variable prior to writing
+  inputBody.innerHTML = "";
+
+  let curEvent = getEventData();
+
+  // sets inputRow equal to template content layout for writing to the table
+  for (let i = 0; i < curEvent.length; i++) {
+    let inputRow = document.importNode(template.content, true);
+
+    // querySelector only selects first found instance, querySelectorAll selects all found 'td'
+    let inputCol = inputRow.querySelectorAll("td");
+    inputCol[0].textContent = curEvent[i].event;
+    inputCol[1].textContent = curEvent[i].city;
+    inputCol[2].textContent = curEvent[i].state;
+    inputCol[3].textContent = curEvent[i].attendance;
+
+    // dates must be formatted specially
+    // toLocaleString will also format date, but with timestamp included
+    let inputDate = new Date(curEvent[i].date).toLocaleDateString();
+    inputCol[4].textContent = inputDate;
+    inputBody.appendChild(inputRow);
+  }
+}
+
+// saves new event input to local storage
+function saveEventData() {
+  let curEvent = getEventData();
+
+  let newEventObj = {};
+
+  newEventObj["event"] = document.getElementById("newEventName").value;
+  newEventObj["city"] = document.getElementById("newEventCity").value;
+
+  // the chosen option is assigned 'selected' class which can be targeted
+  let stateSel = document.getElementById("newEventState");
+  newEventObj["state"] = stateSel.options[stateSel.selectedIndex].textValue;
+
+  newEventObj["attendance"] = parseInt(
+    document.getElementById("newEventAttendance").value,
+    10
+  );
+
+  let eventDate = document.getElementById("newEventDate").value;
+  // date must be formatted with time to pass properly
+  let eventDate2 = `${eventDate} 00:00`;
+  // strips time off eventDate2 and passes along proper date format
+  newEventObj["date"] = new Date(eventDate2).toLocaleDateString();
+
+  // revises the curEvent by adding newEventObj to array end
+  curEvent.push(newEventObj);
+
+  // overwrites the original 'curEvent' object with revised object within local storage
+  localStorage.setItem("inputData", JSON.stringify(curEvent));
+
+  buildDropDown();
 }

@@ -86,10 +86,114 @@
         <div class="col-12 col-lg-8">
           <pre class="line-numbers">
                     <code class="language-js">
-                        function displayMessage() {
-                            let message = document.getElementById("message").value;
-                            alert(message);
-                          }
+                      function buildDropDown() {
+                        let eventDD = document.getElementById("eventDropDown");
+                        eventDD.innerHTML = "";
+                      
+                        const template = document.getElementById("cityDD-template");
+                      
+                        let curEvent = events;
+
+                        let disEvent = [...new Set(curEvent.map((event) => event.city))];
+                      
+                        let ddUL = document.createElement("ul");
+                        ddUL.classList.add("dropdown-menu");
+                      
+                        let ddItemNodeAll = document.importNode(template.content, true);
+                        let cityName = "All";
+                        let ddItemAll = ddItemNodeAll.querySelector("a");
+                        ddItemAll.textContent = cityName;
+                        ddItemAll.setAttribute("data-string", cityName);
+                        ddUL.appendChild(ddItemNodeAll);
+                      
+                        for (let i = 0; i < disEvent.length; i++) {
+                          let ddItemNode = document.importNode(template.content, true);
+                          let cityName = disEvent[i];
+                      
+                          let ddItem = ddItemNode.querySelector("a");
+                      
+                          ddItem.textContent = cityName;
+                      
+                          ddItem.setAttribute("data-string", cityName);
+                      
+                          ddUL.appendChild(ddItemNode); }
+                        eventDD.appendChild(ddUL);
+                      
+                        displayStats(curEvent); }
+                      
+                      function getEvents(element) {
+                        let city = element.getAttribute("data-string");
+                      
+                        let curEvent = events;
+                        let statsHdr = document.getElementById("statsHdr");
+                        statsHdr.innerHTML = `Stats for ${city} Events`;
+                      
+                        let filteredEvents = curEvent;
+                        if (city !== "All") {
+                          filteredEvents = curEvent.filter(function (item) {
+                            if (item.city == city) {
+                              return item; }
+                          });
+                        }
+                      
+                        displayStats(filteredEvents); }
+                      
+                      function displayStats(events) {
+                        let total = 0;
+                        let average = 0;
+                        let most = 0;
+                        let least = -1;
+                      
+                        total = totalAttendance(events);
+                        document.getElementById("total").innerHTML = total.toLocaleString();
+                      
+                        average = avgAttendance(events);
+                        document.getElementById("average").innerHTML = average.toLocaleString(
+                          "en-us",
+                          { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                      
+                        most = mostAttendance(events);
+                        document.getElementById("most").innerHTML = most.toLocaleString();
+                      
+                        least = leastAttendance(events);
+                        document.getElementById("least").innerHTML = least.toLocaleString(); }
+                      
+                      function totalAttendance(events) {
+                        let totalAttendance = 0;
+                      
+                        for (let i = 0; i < events.length; i++) {
+                          totalAttendance += events[i].attendance; }
+                        return totalAttendance; }
+                      
+                      function avgAttendance(events) {
+                        let avgAttendance = 0;
+                        let totalAtt = 0;
+                      
+                        for (let i = 0; i < events.length; i++) {
+                          totalAtt += events[i].attendance; }
+                        avgAttendance = totalAtt / events.length;
+                        return avgAttendance; }
+                      
+                      function mostAttendance(events) {
+                        let mostAttendance = 0;
+                      
+                        for (let i = 0; i < events.length; i++) {
+                          checkMost = events[i].attendance;
+                          if (mostAttendance < checkMost) {
+                            mostAttendance = checkMost; }
+                        }
+                        return mostAttendance; }
+                      
+                      function leastAttendance(events) {
+                        let leastAttendance = -1;
+                      
+                        for (let i = 0; i < events.length; i++) {
+                          checkLeast = events[i].attendance;
+                      
+                          if (leastAttendance > checkLeast || leastAttendance < 0) {
+                            leastAttendance = checkLeast; }
+                        }
+                        return leastAttendance; }
                         </code>
                 </pre>
         </div>
