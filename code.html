@@ -35,7 +35,8 @@
       <nav class="navbar navbar-expand-md navbar-dark fixed-top" id="mainNav">
         <div class="container">
           <a class="navbar-brand" href="/index.html"
-            ><img src="/img/ALEXdark.png" height="50" class="p-1" />Event Manager</a
+            ><img src="/img/ALEXdark.png" height="50" class="p-1" />Event
+            Manager</a
           >
           <button
             class="navbar-toggler"
@@ -86,114 +87,238 @@
         <div class="col-12 col-lg-8">
           <pre class="line-numbers">
                     <code class="language-js">
-                      function buildDropDown() {
-                        let eventDD = document.getElementById("eventDropDown");
-                        eventDD.innerHTML = "";
-                      
-                        const template = document.getElementById("cityDD-template");
-                      
-                        let curEvent = events;
+const events = [
+  {
+    event: "ComicCon",
+    city: "New York",
+    state: "New York",
+    attendance: 240000,
+    date: "06/01/2017",
+  },
+  {
+    event: "ComicCon",
+    city: "New York",
+    state: "New York",
+    attendance: 250000,
+    date: "06/01/2018",
+  },
+  {
+    event: "ComicCon",
+    city: "New York",
+    state: "New York",
+    attendance: 257000,
+    date: "06/01/2019",
+  },
+  {
+    event: "ComicCon",
+    city: "San Diego",
+    state: "California",
+    attendance: 130000,
+    date: "06/01/2017",
+  },
+  {
+    event: "ComicCon",
+    city: "San Diego",
+    state: "California",
+    attendance: 140000,
+    date: "06/01/2018",
+  },
+  {
+    event: "ComicCon",
+    city: "San Diego",
+    state: "California",
+    attendance: 150000,
+    date: "06/01/2019",
+  },
+  {
+    event: "HeroesCon",
+    city: "Charlotte",
+    state: "North Carolina",
+    attendance: 40000,
+    date: "06/01/2017",
+  },
+  {
+    event: "HeroesCon",
+    city: "Charlotte",
+    state: "North Carolina",
+    attendance: 45000,
+    date: "06/01/2018",
+  },
+  {
+    event: "HeroesCon",
+    city: "Charlotte",
+    state: "North Carolina",
+    attendance: 50000,
+    date: "06/01/2019",
+  },
+];
 
-                        let disEvent = [...new Set(curEvent.map((event) => event.city))];
-                      
-                        let ddUL = document.createElement("ul");
-                        ddUL.classList.add("dropdown-menu");
-                      
-                        let ddItemNodeAll = document.importNode(template.content, true);
-                        let cityName = "All";
-                        let ddItemAll = ddItemNodeAll.querySelector("a");
-                        ddItemAll.textContent = cityName;
-                        ddItemAll.setAttribute("data-string", cityName);
-                        ddUL.appendChild(ddItemNodeAll);
-                      
-                        for (let i = 0; i < disEvent.length; i++) {
-                          let ddItemNode = document.importNode(template.content, true);
-                          let cityName = disEvent[i];
-                      
-                          let ddItem = ddItemNode.querySelector("a");
-                      
-                          ddItem.textContent = cityName;
-                      
-                          ddItem.setAttribute("data-string", cityName);
-                      
-                          ddUL.appendChild(ddItemNode); }
-                        eventDD.appendChild(ddUL);
-                      
-                        displayStats(curEvent); }
-                      
-                      function getEvents(element) {
-                        let city = element.getAttribute("data-string");
-                      
-                        let curEvent = events;
-                        let statsHdr = document.getElementById("statsHdr");
-                        statsHdr.innerHTML = `Stats for ${city} Events`;
-                      
-                        let filteredEvents = curEvent;
-                        if (city !== "All") {
-                          filteredEvents = curEvent.filter(function (item) {
-                            if (item.city == city) {
-                              return item; }
-                          });
-                        }
-                      
-                        displayStats(filteredEvents); }
-                      
-                      function displayStats(events) {
-                        let total = 0;
-                        let average = 0;
-                        let most = 0;
-                        let least = -1;
-                      
-                        total = totalAttendance(events);
-                        document.getElementById("total").innerHTML = total.toLocaleString();
-                      
-                        average = avgAttendance(events);
-                        document.getElementById("average").innerHTML = average.toLocaleString(
-                          "en-us",
-                          { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                      
-                        most = mostAttendance(events);
-                        document.getElementById("most").innerHTML = most.toLocaleString();
-                      
-                        least = leastAttendance(events);
-                        document.getElementById("least").innerHTML = least.toLocaleString(); }
-                      
-                      function totalAttendance(events) {
-                        let totalAttendance = 0;
-                      
-                        for (let i = 0; i < events.length; i++) {
-                          totalAttendance += events[i].attendance; }
-                        return totalAttendance; }
-                      
-                      function avgAttendance(events) {
-                        let avgAttendance = 0;
-                        let totalAtt = 0;
-                      
-                        for (let i = 0; i < events.length; i++) {
-                          totalAtt += events[i].attendance; }
-                        avgAttendance = totalAtt / events.length;
-                        return avgAttendance; }
-                      
-                      function mostAttendance(events) {
-                        let mostAttendance = 0;
-                      
-                        for (let i = 0; i < events.length; i++) {
-                          checkMost = events[i].attendance;
-                          if (mostAttendance < checkMost) {
-                            mostAttendance = checkMost; }
-                        }
-                        return mostAttendance; }
-                      
-                      function leastAttendance(events) {
-                        let leastAttendance = -1;
-                      
-                        for (let i = 0; i < events.length; i++) {
-                          checkLeast = events[i].attendance;
-                      
-                          if (leastAttendance > checkLeast || leastAttendance < 0) {
-                            leastAttendance = checkLeast; }
-                        }
-                        return leastAttendance; }
+function buildDropDown() {
+  let eventDD = document.getElementById("eventDropDown");
+  eventDD.innerHTML = "";
+
+  const template = document.getElementById("cityDD-template");
+
+  let curEvent = getEventData();
+
+  let disEvent = [...new Set(curEvent.map((event) => event.city))];
+
+  let ddUL = document.createElement("ul");
+  ddUL.classList.add("dropdown-menu");
+
+  let ddItemNodeAll = document.importNode(template.content, true);
+  let cityName = "All";
+  let ddItemAll = ddItemNodeAll.querySelector("a");
+  ddItemAll.textContent = cityName;
+  ddItemAll.setAttribute("data-string", cityName);
+  ddUL.appendChild(ddItemNodeAll);
+
+  for (let i = 0; i < disEvent.length; i++) {
+    let ddItemNode = document.importNode(template.content, true);
+    let cityName = disEvent[i];
+
+    let ddItem = ddItemNode.querySelector("a");
+
+    ddItem.textContent = cityName;
+
+    ddItem.setAttribute("data-string", cityName);
+
+    ddUL.appendChild(ddItemNode);}
+  eventDD.appendChild(ddUL);
+
+  displayStats(curEvent);
+
+  displayInputData();}
+
+function getEvents(element) {
+  let city = element.getAttribute("data-string");
+
+  let curEvent = getEventData();
+  let statsHdr = document.getElementById("statsHdr");
+  statsHdr.innerHTML = `Stats for ${city} Events`;
+
+  let filteredEvents = curEvent;
+  if (city !== "All") {
+    filteredEvents = curEvent.filter(function (item) {
+      // if City property of item is equal to city filter, returns the entire item
+      if (item.city == city) {
+        return item;}
+    });
+  }
+
+  displayStats(filteredEvents);}
+
+function displayStats(events) {
+  let total = 0;
+  let average = 0;
+  let most = 0;
+  let least = -1;
+
+  total = totalAttendance(events);
+  document.getElementById("total").innerHTML = total.toLocaleString();
+
+  average = avgAttendance(events);
+  document.getElementById("average").innerHTML = average.toLocaleString(
+    "en-us",
+    { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+  most = mostAttendance(events);
+  document.getElementById("most").innerHTML = most.toLocaleString();
+
+  least = leastAttendance(events);
+  document.getElementById("least").innerHTML = least.toLocaleString();}
+
+function totalAttendance(events) {
+  let totalAttendance = 0;
+
+  for (let i = 0; i < events.length; i++) {
+    totalAttendance += events[i].attendance;}
+  return totalAttendance;}
+
+function avgAttendance(events) {
+  let avgAttendance = 0;
+  let totalAtt = 0;
+
+  for (let i = 0; i < events.length; i++) {
+    totalAtt += events[i].attendance;}
+  avgAttendance = totalAtt / events.length;
+  return avgAttendance;}
+
+function mostAttendance(events) {
+  let mostAttendance = 0;
+
+  for (let i = 0; i < events.length; i++) {
+    checkMost = events[i].attendance;
+    if (mostAttendance < checkMost) {
+      mostAttendance = checkMost;}
+  }
+  return mostAttendance;}
+
+function leastAttendance(events) {
+  let leastAttendance = -1;
+
+  for (let i = 0; i < events.length; i++) {
+    checkLeast = events[i].attendance;
+
+    if (leastAttendance > checkLeast || leastAttendance < 0) {
+      leastAttendance = checkLeast;}
+  }
+  return leastAttendance;}
+
+function getEventData() {
+  let curEvent = JSON.parse(localStorage.getItem("eventData"));
+
+  if (curEvent == null) {
+    curEvent = events;
+    localStorage.setItem("eventData", JSON.stringify(curEvent));}
+  return curEvent;}
+
+function displayInputData() {
+  const template = document.getElementById("eventData-template");
+  const inputBody = document.getElementById("inputBody");
+  inputBody.innerHTML = "";
+
+  let curEvent = getEventData();
+
+  for (let i = 0; i < curEvent.length; i++) {
+    let inputRow = document.importNode(template.content, true);
+
+    let inputCol = inputRow.querySelectorAll("td");
+    inputCol[0].textContent = curEvent[i].event;
+    inputCol[1].textContent = curEvent[i].city;
+    inputCol[2].textContent = curEvent[i].state;
+    inputCol[3].textContent = curEvent[i].attendance;
+
+    // dates must be formatted specially
+    // toLocaleString will also format date, but with timestamp included
+    let inputDate = new Date(curEvent[i].date).toLocaleDateString();
+    inputCol[4].textContent = inputDate;
+    inputBody.appendChild(inputRow);}
+}
+
+function saveEventData() {
+  let curEvent = getEventData();
+  let newEventObj = {};
+
+  newEventObj["event"] = document.getElementById("newEventName").value;
+  newEventObj["city"] = document.getElementById("newEventCity").value;
+
+  let stateSel = document.getElementById("newEventState");
+  newEventObj["state"] = stateSel.options[stateSel.selectedIndex].text;
+
+  newEventObj["attendance"] = parseInt(
+    document.getElementById("newEventAttendance").value,
+    10);
+
+  let eventDate = document.getElementById("newEventDate").value;
+  let eventDate2 = `${eventDate} 00:00`;
+  newEventObj["date"] = new Date(eventDate2).toLocaleDateString();
+
+  curEvent.push(newEventObj);
+  localStorage.setItem("eventData", JSON.stringify(curEvent));
+
+  buildDropDown();}
+
                         </code>
                 </pre>
         </div>
