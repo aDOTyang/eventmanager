@@ -87,80 +87,14 @@
         <div class="col-12 col-lg-8">
           <pre class="line-numbers">
                     <code class="language-js">
-const events = [
-  {
-    event: "ComicCon",
-    city: "New York",
-    state: "New York",
-    attendance: 240000,
-    date: "06/01/2017",
-  },
-  {
-    event: "ComicCon",
-    city: "New York",
-    state: "New York",
-    attendance: 250000,
-    date: "06/01/2018",
-  },
-  {
-    event: "ComicCon",
-    city: "New York",
-    state: "New York",
-    attendance: 257000,
-    date: "06/01/2019",
-  },
-  {
-    event: "ComicCon",
-    city: "San Diego",
-    state: "California",
-    attendance: 130000,
-    date: "06/01/2017",
-  },
-  {
-    event: "ComicCon",
-    city: "San Diego",
-    state: "California",
-    attendance: 140000,
-    date: "06/01/2018",
-  },
-  {
-    event: "ComicCon",
-    city: "San Diego",
-    state: "California",
-    attendance: 150000,
-    date: "06/01/2019",
-  },
-  {
-    event: "HeroesCon",
-    city: "Charlotte",
-    state: "North Carolina",
-    attendance: 40000,
-    date: "06/01/2017",
-  },
-  {
-    event: "HeroesCon",
-    city: "Charlotte",
-    state: "North Carolina",
-    attendance: 45000,
-    date: "06/01/2018",
-  },
-  {
-    event: "HeroesCon",
-    city: "Charlotte",
-    state: "North Carolina",
-    attendance: 50000,
-    date: "06/01/2019",
-  },
-];
-
+const events = [{...}];
+  
 function buildDropDown() {
   let eventDD = document.getElementById("eventDropDown");
   eventDD.innerHTML = "";
 
   const template = document.getElementById("cityDD-template");
-
   let curEvent = getEventData();
-
   let disEvent = [...new Set(curEvent.map((event) => event.city))];
 
   let ddUL = document.createElement("ul");
@@ -178,15 +112,12 @@ function buildDropDown() {
     let cityName = disEvent[i];
 
     let ddItem = ddItemNode.querySelector("a");
-
     ddItem.textContent = cityName;
-
     ddItem.setAttribute("data-string", cityName);
-
     ddUL.appendChild(ddItemNode);}
-  eventDD.appendChild(ddUL);
-
-  displayStats(curEvent);
+  
+    eventDD.appendChild(ddUL);
+    displayStats(curEvent);
 
   displayInputData();}
 
@@ -200,7 +131,6 @@ function getEvents(element) {
   let filteredEvents = curEvent;
   if (city !== "All") {
     filteredEvents = curEvent.filter(function (item) {
-      // if City property of item is equal to city filter, returns the entire item
       if (item.city == city) {
         return item;}
     });
@@ -289,8 +219,6 @@ function displayInputData() {
     inputCol[2].textContent = curEvent[i].state;
     inputCol[3].textContent = curEvent[i].attendance;
 
-    // dates must be formatted specially
-    // toLocaleString will also format date, but with timestamp included
     let inputDate = new Date(curEvent[i].date).toLocaleDateString();
     inputCol[4].textContent = inputDate;
     inputBody.appendChild(inputRow);}
@@ -324,9 +252,77 @@ function saveEventData() {
         </div>
         <!-- Code Docs -->
         <div class="col-12 col-lg-4">
-          <p>The code is structured in one function</p>
-          <h5>displayMessage</h5>
-          <p>Prints out the message</p>
+          <p>
+            The code for this events manager application is loosely structured
+            per MVC format. It calculates and displays statistics for events;
+            populates a table with all available event data; allows for use of
+            filters to retrieve distinct lists from the data array; and also
+            uses local storage to store and retrieve event data.
+          </p>
+          <h5>events</h5>
+          <p>
+            This object holds the initial event data. I've removed the object
+            contents here to clean up this page.
+          </p>
+          <h5>buildDropDown()</h5>
+          <p>
+            This function begins by building the dropdown selection button for
+            the application on page load. It first clears the selection, then
+            imports data from the HTML template and filters the array to a
+            distinct set of city names before inserting it back into the
+            dropdown button as an option with anchor tag that will filter the
+            lower table output so that it only populates event data relevant to
+            the selected city. This function also ends by once again calling
+            displayStats() so that
+            <b>All</b> is automatically displayed as the default state of the
+            top table prior to any user input.
+          </p>
+          <h5>getEvents()</h5>
+          <p>
+            Updates the displayed City name based on user input selection. It
+            accomplishes this by filtering the data array by city name and
+            inserting it into the table header.
+          </p>
+          <h5>displayStats()</h5>
+          <p>
+            To populate the top-level table, <b>getEventData()</b> is used to
+            retrieve the 'curEvent' array from local storage and pass it along
+            to displayStats() which then calculates the top-level outputs and
+            inserts them into the table.
+          </p>
+          <h5>
+            totalAttendance(), avgAttendance(), mostAttendance(),
+            leastAttendance()
+          </h5>
+          <p>These four functions calculate the top-level data for events.</p>
+          <h5>getEventData()</h5>
+          <p>
+            This function pulls event data from local storage to mimic database
+            interaction. If there is no event data available in local storage
+            the function then defaults to the initial events data available and
+            saves that to local storage before returning it for use in the other
+            functions.
+          </p>
+          <h5>displayInputData()</h5>
+          <p>
+            Using a loop, this function inserts event data into the lower table
+            based on the dropdown city selection. It first pulls the table
+            template from the template tag located in the index.html and
+            establishes where to insert the filtered data. The for loop then
+            dictates the order in which the inputs shall be arranged, formats
+            the data as needed, and appends the entire row onto the table as a
+            Child before repeating until the conditions are satisfied (all data
+            populated).
+          </p>
+          <h5>saveEventData()</h5>
+          <p>
+            Finally, this application allows users to contribute new event data
+            via input form. First, the existing event data is established via
+            <b>getEventData()</b>. Then, a new object <b>newEventObj</b> is
+            created to hold the newly received user input data. The new data is
+            then assigned to the object before saving it to local storage, where
+            it can be accessed once again via <b>getEventData()</b>.
+          </p>
         </div>
       </div>
     </main>
